@@ -103,7 +103,10 @@ CREATE TABLE `mb_register` (
 -- 5. 寄存器历史数据表 (mb_register_history)
 -- 来源页面: history.html / Monitor.html
 -- 用途: 保存每次轮询读取到的寄存器数值，支持时间范围查询与趋势分析
--- 注意: 该表数据量极大，建议按时间进行分区或归档
+-- 注意:
+-- 1. 该表数据量极大，建议按时间进行分区或归档
+-- 2. 部分 MySQL 版本/云数据库不支持分区表外键，因此本表不设置外键约束，
+--    由应用层保证 device_id/register_id 的引用完整性
 -- ========================================================
 DROP TABLE IF EXISTS `mb_register_history`;
 CREATE TABLE `mb_register_history` (
@@ -119,9 +122,7 @@ CREATE TABLE `mb_register_history` (
     `created_at`        DATETIME(3)  NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     PRIMARY KEY (`id`, `sampled_at`),
     KEY `idx_register_sampled` (`device_id`, `register_id`, `sampled_at`),
-    KEY `idx_sampled_at` (`sampled_at`),
-    CONSTRAINT `fk_history_device` FOREIGN KEY (`device_id`) REFERENCES `mb_device` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_history_register` FOREIGN KEY (`register_id`) REFERENCES `mb_register` (`id`) ON DELETE CASCADE
+    KEY `idx_sampled_at` (`sampled_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='寄存器历史数据表'
 PARTITION BY RANGE (YEAR(`sampled_at`) * 100 + MONTH(`sampled_at`)) (
     PARTITION p202606 VALUES LESS THAN (202607),

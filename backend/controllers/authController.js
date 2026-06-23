@@ -188,6 +188,7 @@ export const updateAvatar = async (req, res) => {
   }
 
   try {
+    console.log(`[Avatar] 用户 ${req.user.userId} 上传头像，长度: ${avatar_url.length}`);
     await executeWithRetry(
       'UPDATE sys_user SET avatar_url = ? WHERE id = ?',
       [avatar_url, req.user.userId]
@@ -202,7 +203,7 @@ export const updateAvatar = async (req, res) => {
     console.error('更新头像失败:', error);
     res.status(500).json({
       success: false,
-      message: '服务器内部错误'
+      message: `服务器内部错误: ${error.message || '未知错误'}`
     });
   }
 };

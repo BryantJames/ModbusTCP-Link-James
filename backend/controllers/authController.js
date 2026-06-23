@@ -179,8 +179,8 @@ export const updateAvatar = async (req, res) => {
     });
   }
 
-  // 限制大小约 2MB
-  if (avatar_url.length > 2.8 * 1024 * 1024) {
+  // 限制大小约 10MB（Base64 后约 13.3MB）
+  if (avatar_url.length > 14 * 1024 * 1024) {
     return res.status(400).json({
       success: false,
       message: '头像文件过大，请压缩后上传'

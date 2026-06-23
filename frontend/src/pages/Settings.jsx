@@ -39,8 +39,8 @@ export default function Settings() {
       return
     }
 
-    if (file.size > 2 * 1024 * 1024) {
-      setAvatarError('图片大小不能超过 2MB')
+    if (file.size > 10 * 1024 * 1024) {
+      setAvatarError('图片大小不能超过 10MB')
       return
     }
 
@@ -94,7 +94,7 @@ export default function Settings() {
                   {uploading ? '上传中...' : '更换头像'}
                 </button>
                 {avatarError && <span className="text-error text-xs">{avatarError}</span>}
-                <span className="text-[10px] text-outline">支持 JPG/PNG，最大 2MB</span>
+                <span className="text-[10px] text-outline">支持 JPG/PNG，最大 10MB</span>
               </div>
             </div>
           </section>

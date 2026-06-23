@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #131313;
+  color: #e5e2e1;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.modbus-grid {
+  background-image: radial-gradient(#303030 1px, transparent 1px);
+  background-size: 24px 24px;
+}

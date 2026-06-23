@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "outline": "#8a919f",
+                    "on-tertiary": "#442c00",
+                    "secondary-container": "#46b703",
+                    "tertiary-fixed-dim": "#ffba45",
+                    "primary-fixed-dim": "#a5c8ff",
+                    "on-primary": "#00315f",
+                    "tertiary": "#ffba45",
+                    "status-error": "#ffb4ab",
+                    "error": "#ffb4ab",
+                    "surface-bright": "#393939",
+                    "secondary-fixed": "#88fd54",
+                    "on-error": "#690005",
+                    "on-surface": "#e5e2e1",
+                    "status-active": "#52c41a",
+                    "surface-container": "#201f1f",
+                    "outline-variant": "#404753",
+                    "on-secondary": "#103900",
+                    "on-primary-container": "#002a53",
+                    "secondary": "#6de039",
+                    "on-primary-fixed-variant": "#214877",
+                    "primary-container": "#7092c6",
+                    "on-secondary-fixed": "#062100",
+                    "on-secondary-fixed-variant": "#1b5200",
+                    "surface-container-high": "#2a2a2a",
+                    "primary-fixed": "#d4e3ff",
+                    "error-container": "#93000a",
+                    "border-muted": "#404753",
+                    "surface-container-lowest": "#0e0e0e",
+                    "terminal-bg": "#0e0e0e",
+                    "surface-container-low": "#1c1b1b",
+                    "on-primary-fixed": "#001c3a",
+                    "primary": "#a5c8ff",
+                    "on-tertiary-container": "#3b2500",
+                    "inverse-primary": "#3c6090",
+                    "border-strong": "#8a919f",
+                    "surface-variant": "#353534",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#281800",
+                    "background": "#131313",
+                    "on-secondary-container": "#134000",
+                    "inverse-surface": "#e5e2e1",
+                    "on-surface-variant": "#c0c7d6",
+                    "surface-tint": "#a5c8ff",
+                    "secondary-fixed-dim": "#6de039",
+                    "surface-container-highest": "#353534",
+                    "inverse-on-surface": "#313030",
+                    "tertiary-container": "#c18508",
+                    "on-background": "#e5e2e1",
+                    "surface-dim": "#131313",
+                    "surface": "#131313",
+                    "on-tertiary-fixed-variant": "#614000",
+                    "tertiary-fixed": "#ffddaf"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter-sm": "8px",
+                    "unit": "4px",
+                    "container-padding": "16px",
+                    "component-gap": "12px",
+                    "gutter-xs": "4px",
+                    "gutter-md": "16px"
+            },
+            "fontFamily": {
+                    "address-label": ["JetBrains Mono"],
+                    "display-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "address-label": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "data-mono": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .status-glow-active {
+            box-shadow: 0 0 12px rgba(82, 196, 26, 0.4);
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #a5c8ff !important;
+        }
+        /* Custom scrollbar for terminal and long lists */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #404753;
+            border-radius: 2px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar Anchor -->
+<aside class="bg-surface-container dark:bg-surface-container w-[220px] h-screen border-r border-border-muted flex flex-col h-full overflow-y-auto fixed left-0 top-0 z-50">
+<div class="p-gutter-md">
+<h1 class="font-display-lg text-display-lg font-bold text-primary tracking-tighter">MODBUS_CORE</h1>
+<p class="font-body-md text-body-md opacity-50 text-on-surface-variant">V2.4.0-STABLE</p>
+</div>
+<nav class="mt-4 flex-1">
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors flex items-center gap-3 hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined">lan</span>
+<span class="font-body-md">设备连接</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors flex items-center gap-3 hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined">monitoring</span>
+<span class="font-body-md">实时监控</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors flex items-center gap-3 hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined">list_alt</span>
+<span class="font-body-md">寄存器读写</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors flex items-center gap-3 hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined">error_outline</span>
+<span class="font-body-md">报警中心</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors flex items-center gap-3 hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-body-md">历史记录</span>
+</a>
+<!-- Active Tab: Settings -->
+<a class="text-secondary-fixed border-l-2 border-secondary-fixed bg-secondary-container/10 px-4 py-3 flex items-center gap-3 hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md">系统设置</span>
+</a>
+</nav>
+<div class="mt-auto p-gutter-md border-t border-border-muted">
+<div class="flex items-center gap-3 mb-4">
+<div class="w-8 h-8 rounded bg-surface-container-high border border-border-muted flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A gritty, industrial portrait of an engineer wearing a tactical headset and protective gear in a dark, tech-focused environment. The lighting is low-key with strong cyan and green accents reflecting from nearby monitors, emphasizing a high-tech utilitarian atmosphere consistent with hardware management software." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbyAlZW3P4cUFYuvEWQbFtuHWkkpLm83o_p2eKcHUpyW5AWedUT6DUCxcjlYYi2HkOtc2itz6a7nS_k40nGdHtX3xIZCZFyzvwwTRZu5XxX1-B_g7qI3N25mcIdr0zm4tDDcefOLXi6GdFwYfgnqd1Y65YuLHeM5WXGkMqRUce_3xMR3NdNgqv489LyjsV0S7OqsoL43GlMa_tbRlN41xy-94YhuGtGvc4kRJxIWGF68SXCR_MgwUKwcESzlda74ZN-eQKYiEKkRmW"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">系统管理员</span>
+<span class="font-address-label text-address-label text-on-surface-variant">权限等级 4</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-[220px] min-h-screen flex flex-col relative">
+<!-- TopAppBar Anchor -->
+<header class="bg-surface dark:bg-surface w-full h-16 border-b border-border-muted flex justify-between items-center px-gutter-md sticky top-0 z-40">
+<div class="flex items-center gap-4">
+<span class="font-address-label text-address-label uppercase text-on-surface-variant">SESSION_UPTIME: 04:22:18</span>
+<div class="h-4 w-[1px] bg-border-muted"></div>
+<h2 class="font-display-lg text-display-lg text-on-surface uppercase tracking-tight">MODBUS_TCP_CONTROLLER</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-status-active status-glow-active"></div>
+<span class="font-address-label text-address-label text-status-active">已连接</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined cursor-pointer hover:bg-surface-container-high p-1 rounded transition-opacity">person</span>
+<span class="material-symbols-outlined cursor-pointer hover:bg-surface-container-high p-1 rounded transition-opacity">schedule</span>
+</div>
+</div>
+</header>
+<!-- Scrollable Content -->
+<div class="p-gutter-md max-w-[1200px] mx-auto w-full">
+<div class="mb-8">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">admin_panel_settings</span>
+                    系统设置 / SYSTEM_SETTINGS
+                </h3>
+<div class="h-1 w-12 bg-primary mt-2"></div>
+</div>
+<!-- Bento-style Grid for Settings -->
+<div class="grid grid-cols-12 gap-gutter-md">
+<!-- Category: Communication -->
+<section class="col-span-12 lg:col-span-7 bg-surface-container border border-border-muted p-gutter-md flex flex-col gap-6">
+<header class="flex justify-between items-center">
+<span class="font-address-label text-address-label uppercase text-on-surface-variant">01_通信配置 / COMMUNICATION</span>
+<span class="material-symbols-outlined text-on-surface-variant">settings_ethernet</span>
+</header>
+<div class="grid grid-cols-2 gap-component-gap">
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">TCP 主机地址 (IP)</label>
+<input class="bg-surface-container-low border border-border-muted px-3 py-2 font-data-mono text-data-mono text-primary" type="text" value="192.168.1.104"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">端口号 (PORT)</label>
+<input class="bg-surface-container-low border border-border-muted px-3 py-2 font-data-mono text-data-mono text-primary" type="text" value="502"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">从站 ID (UNIT ID)</label>
+<input class="bg-surface-container-low border border-border-muted px-3 py-2 font-data-mono text-data-mono text-primary" type="number" value="1"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">响应超时 (TIMEOUT MS)</label>
+<input class="bg-surface-container-low border border-border-muted px-3 py-2 font-data-mono text-data-mono text-primary" type="number" value="1000"/>
+</div>
+</div>
+<div class="flex flex-col gap-4 pt-4 border-t border-border-muted">
+<div class="flex justify-between items-center">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">扫描频率 (SCAN RATE): <span class="text-secondary font-bold">250ms</span></label>
+</div>
+<input class="w-full h-1 bg-surface-container-lowest appearance-none cursor-pointer accent-secondary rounded-full" max="5000" min="50" type="range" value="250"/>
+<div class="flex justify-between font-address-label text-[10px] text-outline">
+<span>50MS</span>
+<span>5000MS</span>
+</div>
+</div>
+</section>
+<!-- Category: UI Theme -->
+<section class="col-span-12 lg:col-span-5 bg-surface-container border border-border-muted p-gutter-md flex flex-col gap-6">
+<header class="flex justify-between items-center">
+<span class="font-address-label text-address-label uppercase text-on-surface-variant">02_界面视觉 / UI_THEME</span>
+<span class="material-symbols-outlined text-on-surface-variant">palette</span>
+</header>
+<div class="flex flex-col gap-4">
+<div class="flex items-center justify-between p-3 bg-surface-container-low border border-border-muted">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface">高对比度模式</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">HIGH CONTRAST MODE</span>
+</div>
+<button class="w-10 h-5 rounded-full bg-secondary-container relative">
+<div class="absolute right-1 top-1 w-3 h-3 bg-on-secondary rounded-full"></div>
+</button>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low border border-border-muted">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface">启用数据动画</span>
+<span class="font-label-sm text-[10px] text-on-surface-variant">DATA ANIMATION</span>
+</div>
+<button class="w-10 h-5 rounded-full bg-surface-variant relative border border-border-muted">
+<div class="absolute left-1 top-1 w-3 h-3 bg-outline rounded-full"></div>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">字体缩放 (UI SCALE)</label>
+<select class="bg-surface-container-low border border-border-muted px-3 py-2 font-data-mono text-data-mono text-on-surface appearance-none">
+<option>COMPACT (12PX)</option>
+<option selected="">DEFAULT (14PX)</option>
+<option>COMFORT (16PX)</option>
+</select>
+</div>
+</div>
+</section>
+<!-- Category: Data Storage -->
+<section class="col-span-12 lg:col-span-6 bg-surface-container border border-border-muted p-gutter-md flex flex-col gap-6">
+<header class="flex justify-between items-center">
+<span class="font-address-label text-address-label uppercase text-on-surface-variant">03_数据存储 / DATA_STORAGE</span>
+<span class="material-symbols-outlined text-on-surface-variant">database</span>
+</header>
+<div class="space-y-4">
+<div class="flex items-center gap-4">
+<div class="flex-1 bg-surface-container-lowest h-8 border border-border-muted relative">
+<div class="absolute inset-y-0 left-0 bg-secondary-container/40 w-[68%]"></div>
+<div class="absolute inset-0 flex items-center px-3 justify-between">
+<span class="font-address-label text-[10px] text-on-surface">STORAGE_USED</span>
+<span class="font-address-label text-[10px] text-secondary">68.4 GB / 100 GB</span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase">日志轮转周期 (LOG RETENTION)</label>
+<div class="flex gap-2">
+<button class="flex-1 py-2 border border-secondary-fixed text-secondary-fixed font-address-label text-[11px] bg-secondary-container/10">7 DAYS</button>
+<button class="flex-1 py-2 border border-border-muted text-on-surface-variant font-address-label text-[11px]">30 DAYS</button>
+<button class="flex-1 py-2 border border-border-muted text-on-surface-variant font-address-label text-[11px]">90 DAYS</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Category: System Info -->
+<section class="col-span-12 lg:col-span-6 bg-surface-container border border-border-muted p-gutter-md flex flex-col gap-4">
+<header class="flex justify-between items-center">
+<span class="font-address-label text-address-label uppercase text-on-surface-variant">04_系统信息 / SYSTEM_INFO</span>
+<span class="material-symbols-outlined text-on-surface-variant">info</span>
+</header>
+<div class="bg-surface-container-lowest p-3 border border-border-muted font-data-mono text-[12px] leading-relaxed">
+<div class="flex justify-between border-b border-border-muted/30 py-1">
+<span class="text-on-surface-variant">DEVICE_SERIAL:</span>
+<span class="text-primary">MB-7749-X21</span>
+</div>
+<div class="flex justify-between border-b border-border-muted/30 py-1">
+<span class="text-on-surface-variant">MAC_ADDRESS:</span>
+<span class="text-primary">00:1A:2B:3C:4D:5E</span>
+</div>
+<div class="flex justify-between border-b border-border-muted/30 py-1">
+<span class="text-on-surface-variant">FIRMWARE_VER:</span>
+<span class="text-secondary">v2.4.0.STABLE</span>
+</div>
+<div class="flex justify-between py-1">
+<span class="text-on-surface-variant">HARDWARE_REV:</span>
+<span class="text-primary">PCB_REV_C</span>
+</div>
+</div>
+<div class="mt-auto pt-4 flex gap-3">
+<button class="flex-1 bg-surface-container-high border border-border-muted py-2 font-address-label text-[11px] text-on-surface hover:bg-surface-variant active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">file_download</span>
+                            导出配置
+                        </button>
+<button class="flex-1 bg-surface-container-high border border-border-muted py-2 font-address-label text-[11px] text-on-surface hover:bg-surface-variant active:scale-95 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[16px]">history_edu</span>
+                            更新日志
+                        </button>
+</div>
+</section>
+<!-- Actions Bar -->
+<div class="col-span-12 mt-8 flex justify-between items-center border-t border-border-muted pt-gutter-md">
+<button class="px-6 py-3 border border-error text-error font-address-label text-[12px] uppercase hover:bg-error/10 active:scale-95 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">restart_alt</span>
+                        恢复出厂设置 / FACTORY RESET
+                    </button>
+<div class="flex gap-4">
+<button class="px-8 py-3 border border-border-muted text-on-surface-variant font-address-label text-[12px] uppercase hover:bg-surface-variant active:scale-95 transition-all">
+                            取消 / CANCEL
+                        </button>
+<button class="px-12 py-3 bg-secondary-container text-on-secondary font-bold font-address-label text-[12px] uppercase active:scale-[0.95] transition-transform flex items-center gap-2">
+<span class="material-symbols-outlined">save</span>
+                            保存更改 / SAVE CHANGES
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Terminal Output (Bottom Fixed for Debugging Feel) -->
+<div class="mt-auto w-full bg-terminal-bg border-t border-border-muted h-32 p-gutter-sm overflow-hidden flex flex-col">
+<div class="flex justify-between items-center mb-2 px-2">
+<span class="font-address-label text-[10px] text-secondary">SYS_CON_LOGS [LIVE]</span>
+<span class="font-address-label text-[10px] text-outline">AUTO_SCROLL: ON</span>
+</div>
+<div class="flex-1 font-data-mono text-[11px] text-on-surface-variant overflow-y-auto px-2 space-y-1">
+<p><span class="text-primary">[14:22:15]</span> SYSTEM_INIT: LOADED CONFIG_V2.JSON</p>
+<p><span class="text-primary">[14:22:16]</span> TCP_STACK: LISTENING ON PORT 502...</p>
+<p><span class="text-primary">[14:22:18]</span> SECURITY: ADMIN_SESSION_KEY VALIDATED</p>
+<p><span class="text-secondary">[14:23:45]</span> MONITOR: POLLING SLAVE_01 @ 250MS INTERVAL</p>
+<p class="animate-pulse"><span class="text-primary">[14:24:01]</span> CMD: ACCESSING SETTINGS_MODULE...</p>
+</div>
+</div>
+</main>
+<!-- Visual Polish: Noise & Scanning lines -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[100] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+<div class="fixed inset-0 pointer-events-none z-[99] overflow-hidden">
+<div class="w-full h-1 bg-primary/10 absolute top-0 animate-[scan_8s_linear_infinite]"></div>
+</div>
+<style>
+        @keyframes scan {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(100vh); }
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            background: #6de039;
+            border-radius: 2px;
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(109, 224, 57, 0.4);
+        }
+    </style>
+<script>
+        // Micro-interaction for range slider
+        const slider = document.querySelector('input[type="range"]');
+        const sliderLabel = document.querySelector('.text-secondary.font-bold');
+        if(slider && sliderLabel) {
+            slider.addEventListener('input', (e) => {
+                sliderLabel.textContent = e.target.value + 'ms';
+            });
+        }
+
+        // Mock "Saving" interaction
+        const saveBtn = document.querySelector('button.bg-secondary-container');
+        if(saveBtn) {
+            saveBtn.addEventListener('click', () => {
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> PROCESSING...`;
+                saveBtn.classList.add('opacity-80');
+                
+                setTimeout(() => {
+                    saveBtn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> SUCCESS`;
+                    saveBtn.classList.remove('bg-secondary-container');
+                    saveBtn.classList.add('bg-status-active');
+                    
+                    setTimeout(() => {
+                        saveBtn.innerHTML = originalText;
+                        saveBtn.classList.remove('bg-status-active');
+                        saveBtn.classList.add('bg-secondary-container');
+                        saveBtn.classList.remove('opacity-80');
+                    }, 2000);
+                }, 1500);
+            });
+        }
+    </script>
+</body></html>

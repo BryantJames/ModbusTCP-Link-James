@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MODBUS_TCP_CONTROLLER - 寄存器读写</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#ffba45",
+                        "surface-container-lowest": "#0e0e0e",
+                        "secondary-container": "#46b703",
+                        "status-error": "#ffb4ab",
+                        "surface-variant": "#353534",
+                        "surface-container-highest": "#353534",
+                        "terminal-bg": "#0e0e0e",
+                        "surface-bright": "#393939",
+                        "on-primary-fixed-variant": "#214877",
+                        "surface-container-low": "#1c1b1b",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#c18508",
+                        "on-surface": "#e5e2e1",
+                        "primary": "#a5c8ff",
+                        "on-tertiary-fixed-variant": "#614000",
+                        "inverse-on-surface": "#313030",
+                        "secondary-fixed-dim": "#6de039",
+                        "surface-container-high": "#2a2a2a",
+                        "outline-variant": "#404753",
+                        "on-tertiary": "#442c00",
+                        "on-background": "#e5e2e1",
+                        "on-tertiary-fixed": "#281800",
+                        "secondary-fixed": "#88fd54",
+                        "surface-dim": "#131313",
+                        "on-primary": "#00315f",
+                        "primary-container": "#7092c6",
+                        "primary-fixed": "#d4e3ff",
+                        "on-secondary-fixed": "#062100",
+                        "status-active": "#52c41a",
+                        "tertiary-fixed-dim": "#ffba45",
+                        "on-primary-container": "#002a53",
+                        "on-surface-variant": "#c0c7d6",
+                        "surface": "#131313",
+                        "on-error": "#690005",
+                        "background": "#131313",
+                        "tertiary-fixed": "#ffddaf",
+                        "surface-tint": "#a5c8ff",
+                        "error-container": "#93000a",
+                        "outline": "#8a919f",
+                        "surface-container": "#201f1f",
+                        "on-secondary-fixed-variant": "#1b5200",
+                        "secondary": "#6de039",
+                        "on-tertiary-container": "#3b2500",
+                        "on-primary-fixed": "#001c3a",
+                        "inverse-primary": "#3c6090",
+                        "border-muted": "#404753",
+                        "on-secondary-container": "#134000",
+                        "error": "#ffb4ab",
+                        "inverse-surface": "#e5e2e1",
+                        "primary-fixed-dim": "#a5c8ff",
+                        "on-secondary": "#103900",
+                        "border-strong": "#8a919f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-xs": "4px",
+                        "container-padding": "16px",
+                        "gutter-sm": "8px",
+                        "gutter-md": "16px",
+                        "unit": "4px",
+                        "component-gap": "12px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "address-label": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "data-mono": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "address-label": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #131313;
+            color: #e5e2e1;
+            overflow: hidden;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #404753;
+            border-radius: 2px;
+        }
+        .status-glow {
+            box-shadow: 0 0 12px rgba(82, 196, 26, 0.4);
+        }
+        .machine-border {
+            border: 1px solid #404753;
+        }
+    </style>
+</head>
+<body class="flex font-body-md text-body-md">
+<!-- SideNavBar (Persistent) -->
+<aside class="bg-surface-container dark:bg-surface-container w-[220px] h-screen border-r border-border-muted flex flex-col h-full overflow-y-auto shrink-0">
+<div class="p-gutter-md">
+<h1 class="font-display-lg text-display-lg font-bold text-primary tracking-tighter">MODBUS_CORE</h1>
+<p class="font-address-label text-[10px] text-on-surface-variant/60">V2.4.0-STABLE</p>
+</div>
+<nav class="flex-1 mt-4">
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors flex items-center gap-3 hover:bg-surface-variant" href="#">
+<span class="material-symbols-outlined text-[20px]">lan</span>
+<span>设备连接</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors flex items-center gap-3 hover:bg-surface-variant" href="#">
+<span class="material-symbols-outlined text-[20px]">monitoring</span>
+<span>实时监控</span>
+</a>
+<a class="text-secondary-fixed border-l-2 border-secondary-fixed bg-secondary-container/10 px-4 py-3 flex items-center gap-3 active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined text-[20px]">list_alt</span>
+<span>寄存器读写</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors flex items-center gap-3 hover:bg-surface-variant" href="#">
+<span class="material-symbols-outlined text-[20px]">error_outline</span>
+<span>报警中心</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors flex items-center gap-3 hover:bg-surface-variant" href="#">
+<span class="material-symbols-outlined text-[20px]">history</span>
+<span>历史记录</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors flex items-center gap-3 hover:bg-surface-variant" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>系统设置</span>
+</a>
+</nav>
+<div class="p-gutter-md border-t border-border-muted flex items-center gap-3">
+<div class="w-8 h-8 bg-surface-container-high rounded flex items-center justify-center border border-border-muted">
+<span class="material-symbols-outlined text-[18px]">person</span>
+</div>
+<div>
+<p class="text-[12px] font-bold text-on-surface">01号工程师</p>
+<div class="flex items-center gap-1">
+<div class="w-1.5 h-1.5 rounded-full bg-status-active status-glow"></div>
+<span class="text-[10px] text-on-surface-variant uppercase">在线</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col h-screen overflow-hidden">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface w-full h-16 border-b border-border-muted flex justify-between items-center px-gutter-md shrink-0">
+<div class="flex items-center gap-4">
+<h2 class="font-display-lg text-display-lg text-on-surface">Modbus TCP 控制中心</h2>
+<div class="machine-border px-3 py-1 flex items-center gap-3 bg-surface-container-low">
+<div class="flex flex-col">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">读取地址</span>
+<input class="bg-transparent border-none p-0 focus:ring-0 text-primary font-data-mono text-data-mono w-16" type="text" value="0x0001"/>
+</div>
+<div class="h-6 w-px bg-border-muted"></div>
+<div class="flex flex-col">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">数量</span>
+<input class="bg-transparent border-none p-0 focus:ring-0 text-primary font-data-mono text-data-mono w-12 text-center" type="text" value="128"/>
+</div>
+<button class="bg-secondary-container hover:bg-secondary-fixed-dim text-on-secondary-container px-3 py-1 rounded-sm text-[11px] font-bold transition-all active:scale-95 ml-2">
+                        轮询更新
+                    </button>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end">
+<span class="font-address-label text-address-label text-on-surface-variant">状态</span>
+<span class="text-status-active font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">link</span>
+                        已连接
+                    </span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined cursor-pointer hover:bg-surface-container-high p-2 rounded transition-opacity duration-200" data-icon="person">person</span>
+<span class="material-symbols-outlined cursor-pointer hover:bg-surface-container-high p-2 rounded transition-opacity duration-200" data-icon="schedule">schedule</span>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="flex-1 flex p-gutter-md gap-gutter-md overflow-hidden">
+<!-- Left: Registers Grid -->
+<section class="flex-[7] flex flex-col machine-border bg-surface-container overflow-hidden">
+<div class="p-gutter-sm border-b border-border-muted bg-surface-container-low flex justify-between items-center">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">当前保持寄存器 [0x0001 - 0x0080]</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer">filter_list</span>
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant cursor-pointer">refresh</span>
+</div>
+</div>
+<div class="flex-1 overflow-auto custom-scrollbar">
+<table class="w-full text-left font-data-mono text-data-mono border-collapse">
+<thead class="sticky top-0 bg-surface-container z-10">
+<tr class="text-on-surface-variant border-b border-border-muted">
+<th class="px-4 py-3 font-bold">地址</th>
+<th class="px-4 py-3 font-bold">类型</th>
+<th class="px-4 py-3 font-bold">十进制</th>
+<th class="px-4 py-3 font-bold">十六进制</th>
+<th class="px-4 py-3 font-bold">二进制</th>
+<th class="px-4 py-3 font-bold text-right">最后读取时间</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-muted/30">
+<!-- Data Row 1 -->
+<tr class="hover:bg-primary/5 transition-colors group cursor-pointer" onclick="selectRegister('0x0001', 'UINT16', '32767')">
+<td class="px-4 py-3 text-primary">0x0001</td>
+<td class="px-4 py-3 text-on-surface-variant">UINT16</td>
+<td class="px-4 py-3 text-on-surface">32767</td>
+<td class="px-4 py-3 text-on-surface-variant">0x7FFF</td>
+<td class="px-4 py-3 text-[10px] text-on-surface-variant/50">0111 1111 1111 1111</td>
+<td class="px-4 py-3 text-right text-[11px] text-on-surface-variant">12:04:31.002</td>
+</tr>
+<!-- Data Row 2 -->
+<tr class="hover:bg-primary/5 transition-colors group cursor-pointer bg-surface-container-low/30" onclick="selectRegister('0x0002', 'FLOAT32', '124.50')">
+<td class="px-4 py-3 text-primary">0x0002</td>
+<td class="px-4 py-3 text-on-surface-variant">FLOAT32</td>
+<td class="px-4 py-3 text-tertiary">124.50</td>
+<td class="px-4 py-3 text-on-surface-variant">0x42F90000</td>
+<td class="px-4 py-3 text-[10px] text-on-surface-variant/50">...</td>
+<td class="px-4 py-3 text-right text-[11px] text-on-surface-variant">12:04:31.002</td>
+</tr>
+<!-- Data Row 3 -->
+<tr class="hover:bg-primary/5 transition-colors group cursor-pointer" onclick="selectRegister('0x0003', 'UINT16', '4096')">
+<td class="px-4 py-3 text-primary">0x0003</td>
+<td class="px-4 py-3 text-on-surface-variant">UINT16</td>
+<td class="px-4 py-3 text-status-active">4096</td>
+<td class="px-4 py-3 text-on-surface-variant">0x1000</td>
+<td class="px-4 py-3 text-[10px] text-on-surface-variant/50">0001 0000 0000 0000</td>
+<td class="px-4 py-3 text-right text-[11px] text-on-surface-variant">12:04:31.002</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group cursor-pointer bg-surface-container-low/30">
+<td class="px-4 py-3 text-primary">0x0004</td>
+<td class="px-4 py-3 text-on-surface-variant">UINT16</td>
+<td class="px-4 py-3 text-on-surface">0</td>
+<td class="px-4 py-3 text-on-surface-variant">0x0000</td>
+<td class="px-4 py-3 text-[10px] text-on-surface-variant/50">0000 0000 0000 0000</td>
+<td class="px-4 py-3 text-right text-[11px] text-on-surface-variant">12:04:31.002</td>
+</tr>
+<tr class="hover:bg-primary/5 transition-colors group cursor-pointer">
+<td class="px-4 py-3 text-primary">0x0005</td>
+<td class="px-4 py-3 text-on-surface-variant">INT16</td>
+<td class="px-4 py-3 text-error">-128</td>
+<td class="px-4 py-3 text-on-surface-variant">0xFF80</td>
+<td class="px-4 py-3 text-[10px] text-on-surface-variant/50">1111 1111 1000 0000</td>
+<td class="px-4 py-3 text-right text-[11px] text-on-surface-variant">12:04:31.002</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Terminal/Logs -->
+<div class="h-32 border-t border-border-muted bg-terminal-bg p-2 font-data-mono text-[11px] custom-scrollbar overflow-y-auto">
+<p class="text-on-surface-variant/40 mb-1 flex items-center gap-2">
+<span class="text-primary">[12:04:31.001]</span>
+<span>TX: [01 03 00 00 00 80 44 21]</span>
+</p>
+<p class="text-on-surface-variant/40 mb-1 flex items-center gap-2">
+<span class="text-secondary">[12:04:31.002]</span>
+<span>RX: [01 03 F0 7F FF 42 F9 ...] (128 字节已接收)</span>
+</p>
+<p class="text-status-active mb-1 flex items-center gap-2">
+<span class="text-primary">[12:04:35.412]</span>
+<span>系统: 寄存器 0x0001 通过手动轮询已更新。</span>
+</p>
+</div>
+</section>
+<!-- Right: Fixed Write Panel -->
+<aside class="flex-[3] flex flex-col gap-gutter-md overflow-y-auto custom-scrollbar">
+<!-- Update Panel -->
+<div class="machine-border bg-surface-container p-gutter-md flex flex-col gap-component-gap">
+<header class="flex items-center justify-between mb-2">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">更新寄存器</span>
+<span class="material-symbols-outlined text-[18px] text-primary">edit_note</span>
+</header>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] text-on-surface-variant font-bold uppercase">目标地址</label>
+<div class="bg-surface-container-low border border-border-muted p-2 font-data-mono text-primary flex items-center justify-between">
+<span id="target-addr">0x0001</span>
+<span class="material-symbols-outlined text-[14px]">lock</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] text-on-surface-variant font-bold uppercase">数值格式</label>
+<select class="bg-surface-container-low border border-border-muted text-on-surface text-[12px] p-2 focus:outline-none focus:border-primary">
+<option>UINT16 (十进制)</option>
+<option>INT16 (十进制)</option>
+<option>十六进制</option>
+<option>二进制</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] text-on-surface-variant font-bold uppercase">写入数值</label>
+<input class="bg-surface-container-low border border-border-muted text-on-surface font-data-mono p-2 focus:ring-0 focus:border-primary outline-none" id="target-val" placeholder="0" type="text"/>
+</div>
+<div class="mt-4 flex flex-col gap-2">
+<button class="w-full bg-secondary-container hover:bg-secondary-fixed text-on-secondary-container font-bold py-3 uppercase text-[11px] tracking-widest active:scale-[0.95] transition-all">
+                            执行写入 [0x06]
+                        </button>
+<button class="w-full border border-status-error text-status-error hover:bg-status-error/10 font-bold py-2 uppercase text-[11px] tracking-widest transition-all">
+                            强制清零
+                        </button>
+</div>
+</div>
+<!-- Simulation/Preview -->
+<div class="machine-border bg-surface-container overflow-hidden">
+<div class="p-gutter-sm border-b border-border-muted bg-surface-container-low">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">控制器遥测数据</span>
+</div>
+<div class="p-gutter-md flex flex-col gap-4">
+<div class="flex items-center justify-between border-b border-border-muted/30 pb-2">
+<span class="text-on-surface-variant text-[12px]">总线负载</span>
+<div class="w-24 bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary w-[42%] h-full"></div>
+</div>
+<span class="font-data-mono text-primary text-[11px]">42.5%</span>
+</div>
+<div class="flex items-center justify-between border-b border-border-muted/30 pb-2">
+<span class="text-on-surface-variant text-[12px]">通讯延迟</span>
+<span class="font-data-mono text-status-active text-[11px]">2.4ms</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-on-surface-variant text-[12px]">CRC 错误</span>
+<span class="font-data-mono text-on-surface text-[11px]">0</span>
+</div>
+</div>
+<div class="h-24 bg-surface-container-lowest relative mt-2">
+<div class="absolute inset-0 opacity-20 flex items-end gap-[1px] px-1 pb-1">
+<div class="flex-1 bg-primary h-[30%]"></div>
+<div class="flex-1 bg-primary h-[45%]"></div>
+<div class="flex-1 bg-primary h-[20%]"></div>
+<div class="flex-1 bg-primary h-[60%]"></div>
+<div class="flex-1 bg-primary h-[85%]"></div>
+<div class="flex-1 bg-primary h-[40%]"></div>
+<div class="flex-1 bg-primary h-[50%]"></div>
+<div class="flex-1 bg-primary h-[70%]"></div>
+<div class="flex-1 bg-primary h-[35%]"></div>
+<div class="flex-1 bg-primary h-[25%]"></div>
+</div>
+</div>
+</div>
+<!-- Help/Doc Card -->
+<div class="machine-border border-primary/30 bg-primary/5 p-gutter-md">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">info</span>
+<div>
+<p class="text-[11px] font-bold text-primary uppercase mb-1">工程备注</p>
+<p class="text-[10px] text-on-surface-variant leading-relaxed">
+                                使用功能码 06 进行单寄存器写入。多寄存器写入 (FC16) 必须通过“系统设置”选项卡中的“批量更新”工具进行。
+                            </p>
+</div>
+</div>
+</div>
+</aside>
+</main>
+</div>
+<script>
+        function selectRegister(addr, type, val) {
+            document.getElementById('target-addr').innerText = addr;
+            document.getElementById('target-val').value = val;
+            
+            // Interaction visual feedback
+            const btn = document.querySelector('button.bg-secondary-container');
+            if(btn) {
+                btn.classList.add('bg-primary-container');
+                setTimeout(() => {
+                    btn.classList.remove('bg-primary-container');
+                }, 300);
+            }
+        }
+
+        // Simulating log scroll
+        const terminal = document.querySelector('.terminal-bg');
+        if (terminal) {
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Atmospheric LED pulse
+        setInterval(() => {
+            const led = document.querySelector('.status-glow');
+            if(led) {
+                led.style.opacity = led.style.opacity === '0.6' ? '1' : '0.6';
+            }
+        }, 1000);
+    </script>
+</body></html>

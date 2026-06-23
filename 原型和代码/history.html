@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#8a919f",
+                        "on-tertiary": "#442c00",
+                        "secondary-container": "#46b703",
+                        "tertiary-fixed-dim": "#ffba45",
+                        "primary-fixed-dim": "#a5c8ff",
+                        "on-primary": "#00315f",
+                        "tertiary": "#ffba45",
+                        "status-error": "#ffb4ab",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#393939",
+                        "secondary-fixed": "#88fd54",
+                        "on-error": "#690005",
+                        "on-surface": "#e5e2e1",
+                        "status-active": "#52c41a",
+                        "surface-container": "#201f1f",
+                        "outline-variant": "#404753",
+                        "on-secondary": "#103900",
+                        "on-primary-container": "#002a53",
+                        "secondary": "#6de039",
+                        "on-primary-fixed-variant": "#214877",
+                        "primary-container": "#7092c6",
+                        "on-secondary-fixed": "#062100",
+                        "on-secondary-fixed-variant": "#1b5200",
+                        "surface-container-high": "#2a2a2a",
+                        "primary-fixed": "#d4e3ff",
+                        "error-container": "#93000a",
+                        "border-muted": "#404753",
+                        "surface-container-lowest": "#0e0e0e",
+                        "terminal-bg": "#0e0e0e",
+                        "surface-container-low": "#1c1b1b",
+                        "on-primary-fixed": "#001c3a",
+                        "primary": "#a5c8ff",
+                        "on-tertiary-container": "#3b2500",
+                        "inverse-primary": "#3c6090",
+                        "border-strong": "#8a919f",
+                        "surface-variant": "#353534",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed": "#281800",
+                        "background": "#131313",
+                        "on-secondary-container": "#134000",
+                        "inverse-surface": "#e5e2e1",
+                        "on-surface-variant": "#c0c7d6",
+                        "surface-tint": "#a5c8ff",
+                        "secondary-fixed-dim": "#6de039",
+                        "surface-container-highest": "#353534",
+                        "inverse-on-surface": "#313030",
+                        "tertiary-container": "#c18508",
+                        "on-background": "#e5e2e1",
+                        "surface-dim": "#131313",
+                        "surface": "#131313",
+                        "on-tertiary-fixed-variant": "#614000",
+                        "tertiary-fixed": "#ffddaf"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-sm": "8px",
+                        "unit": "4px",
+                        "container-padding": "16px",
+                        "component-gap": "12px",
+                        "gutter-xs": "4px",
+                        "gutter-md": "16px"
+                    },
+                    "fontFamily": {
+                        "address-label": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "address-label": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "data-mono": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #131313; color: #e5e2e1; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-thumb { background: #404753; border-radius: 2px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        .chart-grid-line { stroke: #2a2a2a; stroke-width: 1; }
+        .chart-line-1 { stroke: #a5c8ff; stroke-width: 2; fill: none; }
+        .chart-line-2 { stroke: #6de039; stroke-width: 2; fill: none; }
+        .chart-line-3 { stroke: #ffba45; stroke-width: 2; fill: none; }
+        .led-active { box-shadow: 0 0 12px rgba(82, 196, 26, 0.4); }
+    </style>
+</head>
+<body class="font-body-md text-body-md overflow-hidden h-screen flex">
+<!-- Persistent Left Sidebar (SideNavBar) -->
+<aside class="flex flex-col h-full overflow-y-auto bg-surface-container border-r border-border-muted w-[220px] shrink-0">
+<div class="p-6">
+<h1 class="font-display-lg text-display-lg font-bold text-primary tracking-tighter">MODBUS_CORE</h1>
+<p class="font-address-label text-address-label uppercase opacity-60">V2.4.0-STABLE</p>
+</div>
+<nav class="flex-1 mt-4">
+<a class="flex items-center text-on-surface-variant hover:bg-surface-variant px-4 py-3 transition-colors active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined mr-3">lan</span>
+<span>设备连接</span>
+</a>
+<a class="flex items-center text-on-surface-variant hover:bg-surface-variant px-4 py-3 transition-colors active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined mr-3">monitoring</span>
+<span>实时监控</span>
+</a>
+<a class="flex items-center text-on-surface-variant hover:bg-surface-variant px-4 py-3 transition-colors active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined mr-3">list_alt</span>
+<span>寄存器读写</span>
+</a>
+<a class="flex items-center text-on-surface-variant hover:bg-surface-variant px-4 py-3 transition-colors active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined mr-3">error_outline</span>
+<span>报警中心</span>
+</a>
+<a class="flex items-center text-secondary-fixed border-l-2 border-secondary-fixed bg-secondary-container/10 px-4 py-3 transition-colors active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined mr-3">history</span>
+<span>历史记录</span>
+</a>
+<a class="flex items-center text-on-surface-variant hover:bg-surface-variant px-4 py-3 transition-colors active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span>系统设置</span>
+</a>
+</nav>
+<div class="p-4 border-t border-border-muted">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-variant flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional close-up headshot of a technical engineer wearing a dark utility vest in a modern server room environment, low-key industrial lighting with blue and green accents to match the professional dark UI theme." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdudkMkFmHY2GajRIM6IW-i4qTQ8Ghong_cHsMvKNkQSIalDa_SrWu6pssRrt_7GvP7R_DjVfi30k9xxSVSLGiUEXipTQFNNK9f9T7nGopvzBEQVBESuWxzGwZjRg4pPFIvnJj8RMo8eInyXFxJM2pn8vnWV64ihALTgWYs2KDJ5njv6mi4G3cNeTzWjBexTjhLTK_zhUwGQLs44Ay3hLI77ZmQw27hdoumS2ysoqAnUq6vM75jApeNV98ZQNGdrLELTA0ssW0fzIz"/>
+</div>
+<div class="overflow-hidden">
+<p class="text-xs font-bold truncate">ADMIN_USR_01</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest">系统权限</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0 bg-background relative">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center px-gutter-md w-full h-16 border-b border-border-muted bg-surface shrink-0">
+<div class="flex items-center gap-4">
+<h2 class="font-display-lg text-[20px] text-on-surface font-bold tracking-tight">历史记录控制台</h2>
+<span class="px-2 py-0.5 bg-secondary-container/20 text-secondary-fixed text-[10px] font-bold border border-secondary-fixed/30 rounded">LIVE_SYNC</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 text-status-active">
+<div class="w-2 h-2 rounded-full bg-status-active led-active"></div>
+<span class="font-address-label text-address-label uppercase">已连接</span>
+</div>
+<div class="flex gap-4">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface transition-opacity">schedule</span>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-on-surface transition-opacity">person</span>
+</div>
+</div>
+</header>
+<!-- Scrollable Canvas -->
+<div class="flex-1 overflow-y-auto p-gutter-md space-y-gutter-md">
+<!-- Filtering Panel -->
+<section class="bg-surface-container border border-border-muted p-gutter-md">
+<header class="mb-4">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">DATA_QUERY_FILTERS / 数据查询筛选</span>
+</header>
+<div class="grid grid-cols-12 gap-component-gap">
+<div class="col-span-3 space-y-1">
+<label class="text-[10px] text-on-surface-variant font-bold uppercase">Time Range / 时间范围</label>
+<div class="flex items-center bg-surface-container-low border border-border-muted px-3 py-2">
+<input class="bg-transparent border-none focus:ring-0 text-data-mono text-sm w-full outline-none text-on-surface" type="date"/>
+<span class="mx-2 text-border-muted text-xs">至</span>
+<input class="bg-transparent border-none focus:ring-0 text-data-mono text-sm w-full outline-none text-on-surface" type="date"/>
+</div>
+</div>
+<div class="col-span-3 space-y-1">
+<label class="text-[10px] text-on-surface-variant font-bold uppercase">Register Selection / 寄存器选择</label>
+<div class="relative bg-surface-container-low border border-border-muted px-3 py-2 flex items-center justify-between cursor-pointer">
+<span class="text-sm font-data-mono">多选 (3个已选)</span>
+<span class="material-symbols-outlined text-sm">expand_more</span>
+</div>
+</div>
+<div class="col-span-2 space-y-1">
+<label class="text-[10px] text-on-surface-variant font-bold uppercase">Sample Rate / 采样率</label>
+<select class="bg-surface-container-low border border-border-muted px-3 py-2 text-sm font-data-mono w-full focus:border-primary focus:ring-0 outline-none appearance-none">
+<option>100ms</option>
+<option selected="">500ms</option>
+<option>1s</option>
+<option>5s</option>
+</select>
+</div>
+<div class="col-span-2 space-y-1">
+<label class="text-[10px] text-on-surface-variant font-bold uppercase">Format / 格式</label>
+<div class="flex gap-1 bg-surface-container-low p-1 border border-border-muted h-[38px]">
+<button class="flex-1 bg-secondary-container text-on-secondary-fixed text-[10px] font-bold">RAW</button>
+<button class="flex-1 text-on-surface-variant hover:text-on-surface text-[10px] font-bold">CONV</button>
+</div>
+</div>
+<div class="col-span-2 flex items-end">
+<button class="w-full bg-secondary-container hover:bg-secondary-fixed text-on-secondary-fixed font-bold py-2 px-4 transition-transform active:scale-[0.95] flex items-center justify-center gap-2 h-[38px]">
+<span class="material-symbols-outlined text-sm">search</span>
+<span>QUERY</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Main Interactive Chart -->
+<section class="bg-surface-container border border-border-muted flex flex-col h-[400px]">
+<div class="px-gutter-md py-3 border-b border-border-muted flex justify-between items-center">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">MULTI_SERIES_TREND_ANALYSIS / 多序列趋势分析</span>
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<div class="w-3 h-1 bg-primary"></div>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">REG_4001</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-3 h-1 bg-secondary"></div>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">REG_4002</span>
+</div>
+<div class="flex items-center gap-1.5">
+<div class="w-3 h-1 bg-tertiary"></div>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">REG_4003</span>
+</div>
+</div>
+</div>
+<div class="flex-1 relative p-4 bg-terminal-bg">
+<!-- SVG Chart Mockup -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 800 300">
+<!-- Grid -->
+<line class="chart-grid-line" x1="0" x2="800" y1="50" y2="50"></line>
+<line class="chart-grid-line" x1="0" x2="800" y1="100" y2="100"></line>
+<line class="chart-grid-line" x1="0" x2="800" y1="150" y2="150"></line>
+<line class="chart-grid-line" x1="0" x2="800" y1="200" y2="200"></line>
+<line class="chart-grid-line" x1="0" x2="800" y1="250" y2="250"></line>
+<!-- Data Lines -->
+<path class="chart-line-1" d="M0,150 L50,140 L100,160 L150,155 L200,130 L250,145 L300,120 L350,110 L400,135 L450,150 L500,145 L550,130 L600,125 L650,110 L700,115 L750,130 L800,140"></path>
+<path class="chart-line-2" d="M0,200 L50,210 L100,190 L150,185 L200,220 L250,230 L300,210 L350,220 L400,205 L450,195 L500,200 L550,215 L600,220 L650,210 L700,195 L750,185 L800,190"></path>
+<path class="chart-line-3" d="M0,100 L50,90 L100,110 L150,120 L200,95 L250,85 L300,105 L350,95 L400,100 L450,115 L500,105 L550,90 L600,85 L650,100 L700,95 L750,110 L800,105"></path>
+<!-- Hover Marker -->
+<line stroke="#8a919f" stroke-dasharray="4" x1="400" x2="400" y1="0" y2="300"></line>
+</svg>
+<!-- Tooltip overlay -->
+<div class="absolute top-8 left-[410px] bg-surface-container-high border border-primary p-2 pointer-events-none">
+<p class="text-[10px] font-address-label mb-1">T: 14:30:05.500</p>
+<div class="space-y-1">
+<p class="text-xs flex justify-between gap-4"><span class="text-primary">REG_4001:</span> <span class="font-data-mono">135.2</span></p>
+<p class="text-xs flex justify-between gap-4"><span class="text-secondary">REG_4002:</span> <span class="font-data-mono">205.8</span></p>
+<p class="text-xs flex justify-between gap-4"><span class="text-tertiary">REG_4003:</span> <span class="font-data-mono">100.1</span></p>
+</div>
+</div>
+</div>
+</section>
+<!-- Dense Data Grid -->
+<section class="bg-surface-container border border-border-muted flex flex-col">
+<header class="px-gutter-md py-3 border-b border-border-muted flex justify-between items-center bg-surface-container-high">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">DETAILED_HISTORICAL_LOG / 详细历史日志</span>
+<button class="text-xs font-bold text-primary flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm">download</span>
+                        导出 CSV
+                    </button>
+</header>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-border-muted">
+<th class="px-4 py-2 font-address-label text-[10px] text-on-surface-variant uppercase">Timestamp</th>
+<th class="px-4 py-2 font-address-label text-[10px] text-on-surface-variant uppercase">Register</th>
+<th class="px-4 py-2 font-address-label text-[10px] text-on-surface-variant uppercase text-right">Raw Value</th>
+<th class="px-4 py-2 font-address-label text-[10px] text-on-surface-variant uppercase text-right">Conv. Value</th>
+<th class="px-4 py-2 font-address-label text-[10px] text-on-surface-variant uppercase text-center">Status</th>
+</tr>
+</thead>
+<tbody class="font-data-mono text-xs">
+<tr class="border-b border-border-muted/30 hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2 text-primary">2023-11-20 14:30:05.500</td>
+<td class="px-4 py-2">MODBUS_TCP.REG_4001</td>
+<td class="px-4 py-2 text-right">0x4207</td>
+<td class="px-4 py-2 text-right">135.2</td>
+<td class="px-4 py-2 text-center">
+<span class="px-1.5 py-0.5 rounded-full bg-status-active/10 text-status-active text-[9px] border border-status-active/20">VALID</span>
+</td>
+</tr>
+<tr class="border-b border-border-muted/30 hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2 text-primary">2023-11-20 14:30:05.500</td>
+<td class="px-4 py-2">MODBUS_TCP.REG_4002</td>
+<td class="px-4 py-2 text-right">0x2A1C</td>
+<td class="px-4 py-2 text-right">205.8</td>
+<td class="px-4 py-2 text-center">
+<span class="px-1.5 py-0.5 rounded-full bg-status-active/10 text-status-active text-[9px] border border-status-active/20">VALID</span>
+</td>
+</tr>
+<tr class="border-b border-border-muted/30 hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2 text-primary">2023-11-20 14:30:05.498</td>
+<td class="px-4 py-2">MODBUS_TCP.REG_4003</td>
+<td class="px-4 py-2 text-right">0x03E9</td>
+<td class="px-4 py-2 text-right">100.1</td>
+<td class="px-4 py-2 text-center">
+<span class="px-1.5 py-0.5 rounded-full bg-status-error/10 text-status-error text-[9px] border border-status-error/20">WARN</span>
+</td>
+</tr>
+<tr class="border-b border-border-muted/30 hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2 text-primary">2023-11-20 14:30:05.000</td>
+<td class="px-4 py-2">MODBUS_TCP.REG_4001</td>
+<td class="px-4 py-2 text-right">0x4208</td>
+<td class="px-4 py-2 text-right">135.4</td>
+<td class="px-4 py-2 text-center">
+<span class="px-1.5 py-0.5 rounded-full bg-status-active/10 text-status-active text-[9px] border border-status-active/20">VALID</span>
+</td>
+</tr>
+<tr class="border-b border-border-muted/30 hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2 text-primary">2023-11-20 14:30:05.000</td>
+<td class="px-4 py-2">MODBUS_TCP.REG_4002</td>
+<td class="px-4 py-2 text-right">0x2A1B</td>
+<td class="px-4 py-2 text-right">205.6</td>
+<td class="px-4 py-2 text-center">
+<span class="px-1.5 py-0.5 rounded-full bg-status-active/10 text-status-active text-[9px] border border-status-active/20">VALID</span>
+</td>
+</tr>
+<tr class="border-b border-border-muted/30 hover:bg-surface-container-high transition-colors">
+<td class="px-4 py-2 text-primary">2023-11-20 14:30:04.500</td>
+<td class="px-4 py-2">MODBUS_TCP.REG_4001</td>
+<td class="px-4 py-2 text-right">0x4206</td>
+<td class="px-4 py-2 text-right">135.0</td>
+<td class="px-4 py-2 text-center">
+<span class="px-1.5 py-0.5 rounded-full bg-status-active/10 text-status-active text-[9px] border border-status-active/20">VALID</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<footer class="p-3 bg-surface-container-low flex justify-between items-center text-[10px] font-bold text-on-surface-variant">
+<div>SHOWING 50 OF 12,482 RECORDS</div>
+<div class="flex gap-2">
+<button class="px-2 py-1 border border-border-muted hover:bg-surface-variant disabled:opacity-30" disabled="">PREV</button>
+<button class="px-2 py-1 border border-border-muted hover:bg-surface-variant bg-surface-container-high">1</button>
+<button class="px-2 py-1 border border-border-muted hover:bg-surface-variant">2</button>
+<button class="px-2 py-1 border border-border-muted hover:bg-surface-variant">3</button>
+<button class="px-2 py-1 border border-border-muted hover:bg-surface-variant">NEXT</button>
+</div>
+</footer>
+</section>
+</div>
+<!-- Terminal Log Overlay (Minimal) -->
+<div class="fixed bottom-4 right-4 w-80 h-10 bg-terminal-bg border border-border-muted flex items-center px-4 overflow-hidden group hover:h-40 transition-all duration-300">
+<div class="flex-1">
+<span class="text-primary font-data-mono text-[10px] mr-2">[14:30:05]</span>
+<span class="text-on-surface text-[10px] font-data-mono truncate">Fetched 150 records from database...</span>
+</div>
+<div class="hidden group-hover:block absolute top-10 left-4 right-4 space-y-1">
+<p class="text-[10px] font-data-mono"><span class="text-primary">[14:30:04]</span> Connecting to remote SQL...</p>
+<p class="text-[10px] font-data-mono"><span class="text-primary">[14:30:04]</span> Authentication success.</p>
+<p class="text-[10px] font-data-mono"><span class="text-secondary-fixed">[INFO]</span> Cache cleared for REG_4001.</p>
+</div>
+<span class="material-symbols-outlined text-sm text-on-surface-variant group-hover:rotate-180 transition-transform">expand_less</span>
+</div>
+</main>
+<script>
+        // Simple interactivity for demonstration
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                if(!link.classList.contains('text-secondary-fixed')) {
+                    document.querySelectorAll('nav a').forEach(l => {
+                        l.classList.remove('text-secondary-fixed', 'border-l-2', 'border-secondary-fixed', 'bg-secondary-container/10');
+                        l.classList.add('text-on-surface-variant');
+                    });
+                    link.classList.add('text-secondary-fixed', 'border-l-2', 'border-secondary-fixed', 'bg-secondary-container/10');
+                    link.classList.remove('text-on-surface-variant');
+                }
+            });
+        });
+    </script>
+</body></html>

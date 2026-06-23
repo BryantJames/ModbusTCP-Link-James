@@ -1,0 +1,395 @@
+<html class="dark" lang="zh-CN"><head></head><body class="bg-background text-on-surface font-body-md overflow-hidden flex h-screen">
+
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #404753;
+            border-radius: 2px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .status-glow {
+            box-shadow: 0 0 12px rgba(82, 196, 26, 0.4);
+        }
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background: #a5c8ff;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 4px;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#ffba45",
+                        "surface-container-lowest": "#0e0e0e",
+                        "secondary-container": "#46b703",
+                        "status-error": "#ffb4ab",
+                        "surface-variant": "#353534",
+                        "surface-container-highest": "#353534",
+                        "terminal-bg": "#0e0e0e",
+                        "surface-bright": "#393939",
+                        "on-primary-fixed-variant": "#214877",
+                        "surface-container-low": "#1c1b1b",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#c18508",
+                        "on-surface": "#e5e2e1",
+                        "primary": "#a5c8ff",
+                        "on-tertiary-fixed-variant": "#614000",
+                        "inverse-on-surface": "#313030",
+                        "secondary-fixed-dim": "#6de039",
+                        "surface-container-high": "#2a2a2a",
+                        "outline-variant": "#404753",
+                        "on-tertiary": "#442c00",
+                        "on-background": "#e5e2e1",
+                        "on-tertiary-fixed": "#281800",
+                        "secondary-fixed": "#88fd54",
+                        "surface-dim": "#131313",
+                        "on-primary": "#00315f",
+                        "primary-container": "#7092c6",
+                        "primary-fixed": "#d4e3ff",
+                        "on-secondary-fixed": "#062100",
+                        "status-active": "#52c41a",
+                        "tertiary-fixed-dim": "#ffba45",
+                        "on-primary-container": "#002a53",
+                        "on-surface-variant": "#c0c7d6",
+                        "surface": "#131313",
+                        "on-error": "#690005",
+                        "background": "#131313",
+                        "tertiary-fixed": "#ffddaf",
+                        "surface-tint": "#a5c8ff",
+                        "error-container": "#93000a",
+                        "outline": "#8a919f",
+                        "surface-container": "#201f1f",
+                        "on-secondary-fixed-variant": "#1b5200",
+                        "secondary": "#6de039",
+                        "on-tertiary-container": "#3b2500",
+                        "on-primary-fixed": "#001c3a",
+                        "inverse-primary": "#3c6090",
+                        "border-muted": "#404753",
+                        "on-secondary-container": "#134000",
+                        "error": "#ffb4ab",
+                        "inverse-surface": "#e5e2e1",
+                        "primary-fixed-dim": "#a5c8ff",
+                        "on-secondary": "#103900",
+                        "border-strong": "#8a919f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter-xs": "4px",
+                        "container-padding": "16px",
+                        "gutter-sm": "8px",
+                        "gutter-md": "16px",
+                        "unit": "4px",
+                        "component-gap": "12px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "address-label": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "data-mono": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "address-label": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+<!-- SideNavBar Shell -->
+<nav class="bg-surface-container dark:bg-surface-container w-[220px] h-screen border-r border-border-muted flex flex-col h-full overflow-y-auto shrink-0 z-50">
+<div class="p-gutter-md mb-8">
+<h1 class="font-display-lg text-display-lg font-bold text-primary tracking-tighter">MODBUS_CORE</h1>
+<p class="font-address-label text-address-label text-on-surface-variant">V2.4.0-STABLE</p>
+</div>
+<div class="flex flex-col gap-1">
+<!-- Active Tab: Connect -->
+<a class="text-secondary-fixed border-l-2 border-secondary-fixed bg-secondary-container/10 px-4 py-3 active:scale-[0.98] transition-transform duration-100 flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="lan">lan</span>
+<span class="font-body-md text-body-md">设备连接</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant px-4 py-3 transition-colors active:scale-[0.98] flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-body-md text-body-md">实时监控</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant px-4 py-3 transition-colors active:scale-[0.98] flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+<span class="font-body-md text-body-md">寄存器读写</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant px-4 py-3 transition-colors active:scale-[0.98] flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="error_outline">error_outline</span>
+<span class="font-body-md text-body-md">报警中心</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant px-4 py-3 transition-colors active:scale-[0.98] flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-body-md text-body-md">历史记录</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-surface-variant px-4 py-3 transition-colors active:scale-[0.98] flex items-center gap-3" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">系统设置</span>
+</a>
+</div>
+<div class="mt-auto p-gutter-md border-t border-border-muted">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high border border-border-muted flex items-center justify-center overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover opacity-80" data-alt="A professional headshot of a technical system engineer wearing clean industrial workwear. The background is a blurred high-tech server room with soft blue and green ambient lights reflecting off metallic surfaces. The image has a crisp, high-contrast aesthetic typical of modern industrial photography, using a muted color palette with vibrant technical accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClK4XPqyKu0jazFEfV2s4tSuIQfKN-wmpplT_cbj0IubWn2dpOG_rkHVpD9VKgIWSiPPVJQ9UZd3e0LW3nVz47_ykFhFgT_WJGh1VCsHJinV3DLTlZnp0vSPT72AHuqIa3UBaB-_glk_FaE7QIzl41GKrrHLWbM69U3DAbIVtKKT6UN9GTl4dY90UdN1Yo-jmfpcdqDG456SzGBTvwhGE_ij2rw0wGVjlJSq-YW7TrJeMwLKsz8tPCokoxLC-eNP_sB9Lph8R-CMVQ"/>
+</div>
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm">管理员 Alpha</span>
+<span class="text-[10px] text-on-surface-variant font-address-label uppercase tracking-widest">LEVEL 4 AUTH</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopAppBar Shell -->
+<header class="bg-surface dark:bg-surface w-full h-16 border-b border-border-muted flex justify-between items-center px-gutter-md">
+<div class="flex items-center gap-4">
+<span class="font-address-label text-address-label uppercase text-on-surface-variant">系统状态</span>
+<div class="flex items-center gap-2 px-3 py-1 bg-secondary-container/10 border border-secondary-fixed/30 rounded">
+<div class="w-2 h-2 rounded-full bg-status-active status-glow"></div>
+<span class="font-address-label text-address-label uppercase text-status-active">已连接</span>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex flex-col items-end">
+<span class="font-address-label text-address-label text-on-surface-variant">本地时间</span>
+<span class="font-data-mono text-data-mono" id="current-time">14:22:05:004</span>
+</div>
+<div class="h-8 w-[1px] bg-border-muted"></div>
+<div class="flex gap-4 items-center">
+<button class="text-on-surface-variant hover:bg-surface-container-high p-2 transition-opacity duration-200">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+<button class="text-on-surface-variant hover:bg-surface-container-high p-2 transition-opacity duration-200">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-1 p-gutter-md overflow-hidden grid grid-cols-12 gap-gutter-md max-w-[1400px] mx-auto w-full">
+<!-- Left Column: Connection Settings -->
+<div class="col-span-5 flex flex-col gap-gutter-md overflow-y-auto pr-2">
+<!-- Connection Parameters Card -->
+<section class="bg-surface-container border border-border-muted p-gutter-md">
+<div class="mb-gutter-md">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">Modbus TCP 参数配置</span>
+</div>
+<div class="flex flex-col gap-component-gap">
+<div class="flex flex-col gap-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant ml-1">IP 地址</label>
+<div class="grid grid-cols-4 gap-2">
+<input class="bg-surface-container-low border border-border-muted text-data-mono font-data-mono text-center p-2 focus:border-primary focus:outline-none focus:ring-0 transition-colors" type="text" value="192"/>
+<input class="bg-surface-container-low border border-border-muted text-data-mono font-data-mono text-center p-2 focus:border-primary focus:outline-none focus:ring-0 transition-colors" type="text" value="168"/>
+<input class="bg-surface-container-low border border-border-muted text-data-mono font-data-mono text-center p-2 focus:border-primary focus:outline-none focus:ring-0 transition-colors" type="text" value="1"/>
+<input class="bg-surface-container-low border border-border-muted text-data-mono font-data-mono text-center p-2 focus:border-primary focus:outline-none focus:ring-0 transition-colors" type="text" value="10"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-component-gap">
+<div class="flex flex-col gap-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant ml-1">端口</label>
+<input class="bg-surface-container-low border border-border-muted text-data-mono font-data-mono p-2 focus:border-primary focus:outline-none focus:ring-0 transition-colors" type="text" value="502"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-label-sm font-label-sm text-on-surface-variant ml-1">从站 ID (单元 ID)</label>
+<input class="bg-surface-container-low border border-border-muted text-data-mono font-data-mono p-2 focus:border-primary focus:outline-none focus:ring-0 transition-colors" type="text" value="1"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Configuration Options -->
+<section class="bg-surface-container border border-border-muted p-gutter-md">
+<div class="mb-gutter-md">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">协议扩展设置</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 bg-surface-container-low border border-border-muted group hover:border-primary-container transition-colors cursor-pointer">
+<div class="flex flex-col">
+<span class="text-body-md font-body-md">自动重连</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">每 5000ms 重试一次</span>
+</div>
+<div class="w-10 h-5 bg-secondary-container rounded-full relative">
+<div class="absolute right-1 top-1 w-3 h-3 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-low border border-border-muted group hover:border-primary-container transition-colors cursor-pointer">
+<div class="flex flex-col">
+<span class="text-body-md font-body-md">记录二进制帧</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">在终端中包含原始十六进制</span>
+</div>
+<div class="w-10 h-5 bg-surface-variant rounded-full relative">
+<div class="absolute left-1 top-1 w-3 h-3 bg-on-surface-variant rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Actions -->
+<div class="mt-auto grid grid-cols-2 gap-component-gap">
+<button class="flex items-center justify-center gap-2 py-4 bg-secondary-container text-on-secondary-container font-bold uppercase active:scale-[0.95] transition-transform">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+                        初始化连接
+                    </button>
+<button class="flex items-center justify-center gap-2 py-4 border border-error text-error font-bold uppercase active:scale-[0.95] transition-transform">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+                        断开连接
+                    </button>
+</div>
+</div>
+<!-- Right Column: Terminal Log -->
+<div class="col-span-7 flex flex-col border border-border-muted bg-terminal-bg relative overflow-hidden">
+<!-- Terminal Header -->
+<div class="flex justify-between items-center px-4 py-2 bg-surface-container-high border-b border-border-muted">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary" data-icon="terminal">terminal</span>
+<span class="font-address-label text-address-label text-on-surface uppercase">实时通信日志</span>
+</div>
+<div class="flex gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="delete">delete</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Terminal Content -->
+<div class="flex-1 overflow-y-auto p-4 font-data-mono text-data-mono flex flex-col gap-1" id="terminal-content">
+<div class="flex gap-4">
+<span class="text-primary">[14:20:01.002]</span>
+<span class="text-on-surface-variant">SYS_INIT: Initializing Modbus Core V2.4.0...</span>
+</div>
+<div class="flex gap-4">
+<span class="text-primary">[14:20:01.045]</span>
+<span class="text-on-surface-variant">SYS_INIT: Hardware abstraction layer loaded.</span>
+</div>
+<div class="flex gap-4">
+<span class="text-primary">[14:22:00.112]</span>
+<span class="text-secondary">NET_SOCK: Socket bound to 192.168.1.10:502</span>
+</div>
+<div class="flex gap-4">
+<span class="text-primary">[14:22:00.450]</span>
+<span class="text-status-active">MOD_CONN: Connected to Slave ID 01. HANDSHAKE_OK.</span>
+</div>
+<div class="flex gap-4">
+<span class="text-primary">[14:22:01.100]</span>
+<span class="text-on-surface">READ_REQ: [00 01 00 00 00 06 01 03 00 00 00 0A]</span>
+</div>
+<div class="flex gap-4">
+<span class="text-primary">[14:22:01.120]</span>
+<span class="text-tertiary">READ_RES: [00 01 00 00 00 17 01 03 14 00 2C 00 ...]</span>
+</div>
+<div class="flex gap-4">
+<span class="text-primary">[14:22:02.101]</span>
+<span class="text-on-surface">READ_REQ: [00 02 00 00 00 06 01 03 00 00 00 0A]</span>
+</div>
+<div class="flex gap-4">
+<span class="text-primary">[14:22:02.122]</span>
+<span class="text-tertiary">READ_RES: [00 02 00 00 00 17 01 03 14 00 2D 00 ...]</span>
+</div>
+<!-- Cursor Line -->
+<div class="flex gap-4 mt-1">
+<span class="text-primary">root@modbus_core:~#</span>
+<span class="terminal-cursor"></span>
+</div>
+</div>
+<!-- Log Visualizer (Asymmetric Element) -->
+<div class="absolute bottom-4 right-4 w-32 h-24 pointer-events-none opacity-20 border-r border-b border-primary/40">
+<div class="h-full w-full flex items-end gap-1 px-1 py-1">
+<div class="bg-primary w-2 h-[20%]"></div>
+<div class="bg-primary w-2 h-[45%]"></div>
+<div class="bg-primary w-2 h-[30%]"></div>
+<div class="bg-primary w-2 h-[80%]"></div>
+<div class="bg-primary w-2 h-[60%]"></div>
+<div class="bg-primary w-2 h-[95%]"></div>
+<div class="bg-primary w-2 h-[40%]"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Update Time Interaction
+        function updateTime() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ':' +
+                          now.getMinutes().toString().padStart(2, '0') + ':' +
+                          now.getSeconds().toString().padStart(2, '0') + ':' +
+                          now.getMilliseconds().toString().padStart(3, '0');
+            document.getElementById('current-time').textContent = timeStr;
+        }
+        setInterval(updateTime, 47);
+
+        // Simulated Terminal Feed
+        const terminal = document.getElementById('terminal-content');
+        const logs = [
+            { type: 'READ_REQ', hex: '[00 XX 00 00 00 06 01 03 00 00 00 0A]', color: 'text-on-surface' },
+            { type: 'READ_RES', hex: '[00 XX 00 00 00 17 01 03 14 00 2D 00 ...]', color: 'text-tertiary' }
+        ];
+        let counter = 3;
+
+        function addLog() {
+            const now = new Date();
+            const timeStr = `[${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}.${now.getMilliseconds().toString().padStart(3, '0')}]`;
+            
+            const logEntry = logs[counter % 2];
+            const hexStr = logEntry.hex.replace('XX', counter.toString().padStart(2, '0'));
+            
+            const div = document.createElement('div');
+            div.className = 'flex gap-4 opacity-0 transition-opacity duration-300';
+            div.innerHTML = `
+                <span class="text-primary">${timeStr}</span>
+                <span class="${logEntry.color}">${logEntry.type}: ${hexStr}</span>
+            `;
+            
+            const cursorLine = terminal.lastElementChild;
+            terminal.insertBefore(div, cursorLine);
+            
+            // Trigger opacity animation
+            setTimeout(() => div.classList.remove('opacity-0'), 10);
+            
+            // Auto-scroll
+            terminal.scrollTop = terminal.scrollHeight;
+            
+            counter++;
+            // Randomized interval for realism
+            setTimeout(addLog, Math.random() * 2000 + 500);
+        }
+
+        setTimeout(addLog, 2000);
+    </script>
+</body></html>

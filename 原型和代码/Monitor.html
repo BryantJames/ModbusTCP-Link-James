@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Modbus TCP 控制中心 - 实时监控</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#ffba45",
+                    "surface-container-lowest": "#0e0e0e",
+                    "secondary-container": "#46b703",
+                    "status-error": "#ffb4ab",
+                    "surface-variant": "#353534",
+                    "surface-container-highest": "#353534",
+                    "terminal-bg": "#0e0e0e",
+                    "surface-bright": "#393939",
+                    "on-primary-fixed-variant": "#214877",
+                    "surface-container-low": "#1c1b1b",
+                    "on-error-container": "#ffdad6",
+                    "tertiary-container": "#c18508",
+                    "on-surface": "#e5e2e1",
+                    "primary": "#a5c8ff",
+                    "on-tertiary-fixed-variant": "#614000",
+                    "inverse-on-surface": "#313030",
+                    "secondary-fixed-dim": "#6de039",
+                    "surface-container-high": "#2a2a2a",
+                    "outline-variant": "#404753",
+                    "on-tertiary": "#442c00",
+                    "on-background": "#e5e2e1",
+                    "on-tertiary-fixed": "#281800",
+                    "secondary-fixed": "#88fd54",
+                    "surface-dim": "#131313",
+                    "on-primary": "#00315f",
+                    "primary-container": "#7092c6",
+                    "primary-fixed": "#d4e3ff",
+                    "on-secondary-fixed": "#062100",
+                    "status-active": "#52c41a",
+                    "tertiary-fixed-dim": "#ffba45",
+                    "on-primary-container": "#002a53",
+                    "on-surface-variant": "#c0c7d6",
+                    "surface": "#131313",
+                    "on-error": "#690005",
+                    "background": "#131313",
+                    "tertiary-fixed": "#ffddaf",
+                    "surface-tint": "#a5c8ff",
+                    "error-container": "#93000a",
+                    "outline": "#8a919f",
+                    "surface-container": "#201f1f",
+                    "on-secondary-fixed-variant": "#1b5200",
+                    "secondary": "#6de039",
+                    "on-tertiary-container": "#3b2500",
+                    "on-primary-fixed": "#001c3a",
+                    "inverse-primary": "#3c6090",
+                    "border-muted": "#404753",
+                    "on-secondary-container": "#134000",
+                    "error": "#ffb4ab",
+                    "inverse-surface": "#e5e2e1",
+                    "primary-fixed-dim": "#a5c8ff",
+                    "on-secondary": "#103900",
+                    "border-strong": "#8a919f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter-xs": "4px",
+                    "container-padding": "16px",
+                    "gutter-sm": "8px",
+                    "gutter-md": "16px",
+                    "unit": "4px",
+                    "component-gap": "12px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "body-md": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "address-label": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "data-mono": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "address-label": ["11px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .status-glow-active {
+            box-shadow: 0 0 12px rgba(82, 196, 26, 0.4);
+        }
+        .terminal-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .terminal-scroll::-webkit-scrollbar-thumb {
+            background: #404753;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-[220px] h-screen border-r border-border-muted bg-surface-container flex flex-col fixed left-0 top-0 z-50">
+<div class="p-gutter-md">
+<div class="font-display-lg text-display-lg font-bold text-primary tracking-tighter">MODBUS_CORE</div>
+<div class="font-address-label text-address-label text-on-surface-variant mt-1">V2.4.0-STABLE</div>
+</div>
+<nav class="flex-1 overflow-y-auto mt-4">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="lan">lan</span>
+<span class="font-body-md text-body-md">设备连接</span>
+</a>
+<a class="flex items-center gap-3 text-secondary-fixed border-l-2 border-secondary-fixed bg-secondary-container/10 px-4 py-3 active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="monitoring">monitoring</span>
+<span class="font-body-md text-body-md">实时监控</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+<span class="font-body-md text-body-md">寄存器读写</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="error_outline">error_outline</span>
+<span class="font-body-md text-body-md">报警中心</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-body-md text-body-md">历史记录</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface px-4 py-3 transition-colors hover:bg-surface-variant active:scale-[0.98] transition-transform duration-100" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">系统设置</span>
+</a>
+</nav>
+<div class="p-gutter-md border-t border-border-muted flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="person">person</span>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface">系统管理员</div>
+<div class="font-address-label text-[10px] text-on-surface-variant uppercase tracking-widest">ID: 440291</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-[220px] flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="w-full h-16 border-b border-border-muted bg-surface flex justify-between items-center px-gutter-md sticky top-0 z-40">
+<div class="flex items-center gap-6">
+<h1 class="font-display-lg text-display-lg text-on-surface">Modbus TCP 控制中心</h1>
+<div class="flex items-center gap-2 px-3 py-1 bg-secondary-container/20 border border-secondary-container/30 rounded-sm">
+<span class="w-2 h-2 rounded-full bg-status-active status-glow-active"></span>
+<span class="font-address-label text-address-label text-secondary-fixed">已连接</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex bg-surface-container-low border border-border-muted overflow-hidden">
+<button class="px-3 py-1.5 flex items-center gap-1.5 font-address-label text-address-label text-status-active hover:bg-surface-container-high border-r border-border-muted transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                            运行
+                        </button>
+<button class="px-3 py-1.5 flex items-center gap-1.5 font-address-label text-address-label text-on-surface-variant hover:bg-surface-container-high border-r border-border-muted transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="pause">pause</span>
+                            单步
+                        </button>
+<button class="px-3 py-1.5 flex items-center gap-1.5 font-address-label text-address-label text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]" data-icon="stop" style="font-variation-settings: 'FILL' 1;">stop</span>
+                            停止
+                        </button>
+</div>
+<div class="h-8 w-px bg-border-muted"></div>
+<div class="flex items-center gap-4">
+<div class="flex flex-col items-end">
+<span class="font-address-label text-[10px] text-on-surface-variant uppercase">PLC 错误</span>
+<span class="font-address-label text-address-label text-error">000</span>
+</div>
+<button class="w-10 h-10 flex items-center justify-center hover:bg-surface-container-high transition-colors rounded">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="schedule">schedule</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-gutter-md flex-1 overflow-y-auto max-w-[1200px] mx-auto w-full">
+<!-- Data Grid (3x2) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter-md mb-gutter-md">
+<!-- Temperature Card -->
+<div class="bg-surface-container border border-border-muted p-gutter-md flex flex-col gap-gutter-sm group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">HR_0041 // 温度 A</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="thermostat">thermostat</span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-data-mono text-[32px] text-primary tracking-tighter" id="temp-val">74.2</span>
+<span class="font-address-label text-address-label text-on-surface-variant">°C</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1 mt-2">
+<div class="bg-primary h-full" style="width: 74%"></div>
+</div>
+</div>
+<!-- Pressure Card -->
+<div class="bg-surface-container border border-border-muted p-gutter-md flex flex-col gap-gutter-sm group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">HR_0042 // 系统压力</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="compress">compress</span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-data-mono text-[32px] text-primary tracking-tighter" id="press-val">120.4</span>
+<span class="font-address-label text-address-label text-on-surface-variant">BAR</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1 mt-2">
+<div class="bg-primary h-full" style="width: 60%"></div>
+</div>
+</div>
+<!-- Flow Card -->
+<div class="bg-surface-container border border-border-muted p-gutter-md flex flex-col gap-gutter-sm group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">HR_0043 // 流量</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="waves">waves</span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-data-mono text-[32px] text-primary tracking-tighter" id="flow-val">8.42</span>
+<span class="font-address-label text-address-label text-on-surface-variant">M3/H</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1 mt-2">
+<div class="bg-primary h-full" style="width: 42%"></div>
+</div>
+</div>
+<!-- Humidity Card -->
+<div class="bg-surface-container border border-border-muted p-gutter-md flex flex-col gap-gutter-sm group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">HR_0044 // 湿度</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="humidity_low">humidity_low</span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-data-mono text-[32px] text-on-surface tracking-tighter" id="humid-val">45.1</span>
+<span class="font-address-label text-address-label text-on-surface-variant">%</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1 mt-2">
+<div class="bg-on-surface-variant h-full" style="width: 45%"></div>
+</div>
+</div>
+<!-- Load Card -->
+<div class="bg-surface-container border border-border-muted p-gutter-md flex flex-col gap-gutter-sm group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">HR_0045 // 功率负载</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="bolt">bolt</span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-data-mono text-[32px] text-on-surface tracking-tighter" id="load-val">1.2</span>
+<span class="font-address-label text-address-label text-on-surface-variant">KW</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1 mt-2">
+<div class="bg-on-surface-variant h-full" style="width: 12%"></div>
+</div>
+</div>
+<!-- Frequency Card -->
+<div class="bg-surface-container border border-border-muted p-gutter-md flex flex-col gap-gutter-sm group hover:border-primary/50 transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">HR_0046 // 输出频率</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="rebase_edit">rebase_edit</span>
+</div>
+<div class="flex items-baseline gap-2 mt-2">
+<span class="font-data-mono text-[32px] text-on-surface tracking-tighter" id="freq-val">50.0</span>
+<span class="font-address-label text-address-label text-on-surface-variant">HZ</span>
+</div>
+<div class="w-full bg-surface-container-lowest h-1 mt-2">
+<div class="bg-on-surface-variant h-full" style="width: 50%"></div>
+</div>
+</div>
+</div>
+<!-- Large Multi-series Line Chart -->
+<div class="bg-surface-container border border-border-muted flex flex-col h-[400px]">
+<div class="p-gutter-md border-b border-border-muted flex justify-between items-center">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">实时数据流 (多系列)</span>
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="font-address-label text-[10px] text-on-surface-variant uppercase">温度 A</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<span class="font-address-label text-[10px] text-on-surface-variant uppercase">系统压力</span>
+</div>
+</div>
+</div>
+<div class="flex-1 relative overflow-hidden bg-terminal-bg p-gutter-md flex flex-col justify-end">
+<!-- Simulated Chart Grid -->
+<div class="absolute inset-0 grid grid-cols-8 grid-rows-4 pointer-events-none opacity-10">
+<div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div>
+<div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div>
+<div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div>
+<div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div>
+<div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div>
+<div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div>
+<div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div>
+<div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div><div class="border-r border-b border-outline"></div>
+</div>
+<!-- Simulated Waveform SVG -->
+<svg class="w-full h-full absolute inset-0" preserveaspectratio="none" viewbox="0 0 1000 100">
+<!-- Temp Series -->
+<path class="opacity-80" d="M0,50 Q125,10 250,50 T500,50 T750,50 T1000,50" fill="none" stroke="#a5c8ff" stroke-width="2">
+<animate attributename="d" dur="5s" repeatcount="indefinite" values="M0,50 Q125,10 250,50 T500,50 T750,50 T1000,50; M0,50 Q125,90 250,50 T500,50 T750,50 T1000,50; M0,50 Q125,10 250,50 T500,50 T750,50 T1000,50"></animate>
+</path>
+<!-- Press Series -->
+<path class="opacity-60" d="M0,70 L100,65 L200,75 L300,60 L400,80 L500,65 L600,75 L700,55 L800,70 L900,60 L1000,70" fill="none" stroke="#6de039" stroke-width="1.5">
+<animate attributename="d" dur="3s" repeatcount="indefinite" values="M0,70 L100,65 L200,75 L300,60 L400,80 L500,65 L600,75 L700,55 L800,70 L900,60 L1000,70; M0,72 L100,60 L200,80 L300,55 L400,85 L500,60 L600,80 L700,50 L800,75 L900,55 L1000,72; M0,70 L100,65 L200,75 L300,60 L400,80 L500,65 L600,75 L700,55 L800,70 L900,60 L1000,70"></animate>
+</path>
+</svg>
+<div class="relative z-10 flex justify-between font-address-label text-[10px] text-on-surface-variant uppercase">
+<span>T-60s</span>
+<span>T-45s</span>
+<span>T-30s</span>
+<span>T-15s</span>
+<span class="text-secondary-fixed">当前实时</span>
+</div>
+</div>
+</div>
+<!-- Bottom Terminal/Event Log -->
+<div class="mt-gutter-md bg-terminal-bg border border-border-muted flex flex-col h-[180px]">
+<div class="px-gutter-md py-2 border-b border-border-muted flex items-center justify-between">
+<span class="font-address-label text-address-label text-on-surface-variant uppercase">系统事件日志</span>
+<span class="font-address-label text-[10px] text-secondary-fixed">轮询频率: 100ms</span>
+</div>
+<div class="flex-1 overflow-y-auto p-gutter-md terminal-scroll font-data-mono text-data-mono text-on-surface-variant space-y-1">
+<div><span class="text-primary">[14:02:33.411]</span> 已建立 TCP 连接至 192.168.1.100:502</div>
+<div><span class="text-primary">[14:02:33.425]</span> 单元 ID: 01 读取保持寄存器 (40041, 6)</div>
+<div><span class="text-primary">[14:02:33.512]</span> 数据更新成功</div>
+<div class="text-on-surface"><span class="text-primary">[14:03:01.002]</span> 已接收到 PLC 心跳应答 (ACK)</div>
+<div class="text-tertiary-fixed-dim"><span class="text-primary">[14:03:15.882]</span> 警告: 温度 A 超过软限制 (74.0°C)</div>
+<div><span class="text-primary">[14:03:16.112]</span> 日志转储已写入至 /VAR/LOG/MODBUS/STREAM_04.LOG</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Update simulated data values periodically
+        function updateStats() {
+            const tempVal = document.getElementById('temp-val');
+            const pressVal = document.getElementById('press-val');
+            const flowVal = document.getElementById('flow-val');
+
+            if (tempVal) {
+                const current = parseFloat(tempVal.innerText);
+                const next = (current + (Math.random() - 0.5)).toFixed(1);
+                tempVal.innerText = next;
+            }
+
+            if (pressVal) {
+                const current = parseFloat(pressVal.innerText);
+                const next = (current + (Math.random() - 0.5) * 2).toFixed(1);
+                pressVal.innerText = next;
+            }
+
+            if (flowVal) {
+                const current = parseFloat(flowVal.innerText);
+                const next = (current + (Math.random() - 0.5) * 0.1).toFixed(2);
+                flowVal.innerText = next;
+            }
+        }
+
+        setInterval(updateStats, 1500);
+
+        // Add scanline effect to terminal
+        const terminal = document.querySelector('.terminal-scroll');
+        if (terminal) {
+            terminal.style.position = 'relative';
+            const scanline = document.createElement('div');
+            scanline.className = 'absolute inset-0 pointer-events-none opacity-[0.03]';
+            scanline.style.background = 'linear-gradient(rgba(165, 200, 255, 0) 50%, rgba(165, 200, 255, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02))';
+            scanline.style.backgroundSize = '100% 2px, 3px 100%';
+            terminal.appendChild(scanline);
+        }
+    </script>
+</body></html>

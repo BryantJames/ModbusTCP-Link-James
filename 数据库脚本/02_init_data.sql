@@ -16,8 +16,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- --------------------------------------------------------
 TRUNCATE TABLE `sys_user`;
 INSERT INTO `sys_user` (`username`, `password_hash`, `display_name`, `role`, `auth_level`, `status`) VALUES
-('admin',    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIJj9AhDLEmTg0ZJfKvCfZPzT8Xq2PjG', '系统管理员', 'admin', 4, 1),
-('operator', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIJj9AhDLEmTg0ZJfKvCfZPzT8Xq2PjG', '01号工程师', 'operator', 2, 1);
+('admin',    '$2a$10$KJ9inT1JvJ6P8gcf7ekHzO8bKzBqfXMU9h2UQeL6cwIZrjS7qJGTW', '系统管理员', 'admin', 4, 1),
+('operator', '$2a$10$9jc4pKl3F2eX9dlCBKKVcu7xYhtTCKUUpR9Ox.l4IJkgiuVOc11F2', '01号工程师', 'operator', 2, 1);
 
 -- --------------------------------------------------------
 -- 2. 初始化默认 Modbus 设备

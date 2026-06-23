@@ -2,6 +2,12 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+import DeviceLink from './pages/DeviceLink.jsx'
+import Monitor from './pages/Monitor.jsx'
+import Registers from './pages/Registers.jsx'
+import Alarms from './pages/Alarms.jsx'
+import History from './pages/History.jsx'
+import Settings from './pages/Settings.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 
 function App() {
@@ -10,6 +16,8 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
         <Route
           path="/dashboard"
           element={
@@ -18,7 +26,54 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route
+          path="/device-link"
+          element={
+            <ProtectedRoute>
+              <DeviceLink />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/monitor"
+          element={
+            <ProtectedRoute>
+              <Monitor />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/registers"
+          element={
+            <ProtectedRoute>
+              <Registers />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/alarms"
+          element={
+            <ProtectedRoute>
+              <Alarms />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <History />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </div>
   )

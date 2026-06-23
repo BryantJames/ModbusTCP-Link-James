@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/modbus_tcp_controller?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 10000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+# JWT 配置
+jwt:
+  secret: james-modbus-tcp-secret-key-2026-change-in-production
+  expiration: 86400000  # 24 小时，单位毫秒
+  header: Authorization
+  prefix: Bearer
+
+# Modbus 默认配置
+modbus:
+  default-timeout: 1000
+  default-retries: 2
+  polling:
+    enabled: true
+    # 全局默认轮询间隔，可被设备配置覆盖
+    default-scan-rate-ms: 1000
+
+# 跨域配置
+cors:
+  allowed-origins: "*"
+  allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
+  allowed-headers: "*"
+  allow-credentials: false

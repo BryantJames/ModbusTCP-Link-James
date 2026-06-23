@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.james.modbustcp.mapper.SysAlarmMapper">
+
+    <resultMap id="alarmWithRegisterName" type="com.james.modbustcp.entity.SysAlarm">
+        <id column="id" property="id"/>
+        <result column="device_id" property="deviceId"/>
+        <result column="register_id" property="registerId"/>
+        <result column="alarm_type" property="alarmType"/>
+        <result column="alarm_content" property="alarmContent"/>
+        <result column="alarm_value" property="alarmValue"/>
+        <result column="limit_value" property="limitValue"/>
+        <result column="status" property="status"/>
+        <result column="confirmed_by" property="confirmedBy"/>
+        <result column="confirmed_at" property="confirmedAt"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <select id="selectPendingWithRegisterName" resultMap="alarmWithRegisterName">
+        SELECT a.*, r.register_name AS registerName
+        FROM sys_alarm a
+        LEFT JOIN mb_register r ON a.register_id = r.id
+        WHERE a.status = 0
+        ORDER BY a.created_at DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+</mapper>

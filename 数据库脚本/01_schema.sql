@@ -26,6 +26,7 @@ CREATE TABLE `sys_user` (
     `username`        VARCHAR(50)  NOT NULL COMMENT '操作员身份/登录账号',
     `password_hash`   VARCHAR(255) NOT NULL COMMENT '授权密钥哈希 (bcrypt/argon2)',
     `display_name`    VARCHAR(100) DEFAULT NULL COMMENT '显示名称，如：管理员 Alpha',
+    `avatar_url`      TEXT         DEFAULT NULL COMMENT '头像图片 Base64 或 URL',
     `role`            VARCHAR(20)  NOT NULL DEFAULT 'operator' COMMENT '角色：admin-管理员, operator-操作员',
     `auth_level`      TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '权限等级 1-4',
     `status`          TINYINT UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态：0-禁用, 1-启用',

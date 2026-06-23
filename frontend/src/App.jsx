@@ -1,9 +1,8 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
-import Dashboard from './pages/Dashboard.jsx'
-import DeviceLink from './pages/DeviceLink.jsx'
 import Monitor from './pages/Monitor.jsx'
+import DeviceLink from './pages/DeviceLink.jsx'
 import Registers from './pages/Registers.jsx'
 import Alarms from './pages/Alarms.jsx'
 import History from './pages/History.jsx'
@@ -16,13 +15,13 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/" element={<Navigate to="/monitor" replace />} />
 
         <Route
-          path="/dashboard"
+          path="/monitor"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Monitor />
             </ProtectedRoute>
           }
         />
@@ -31,14 +30,6 @@ function App() {
           element={
             <ProtectedRoute>
               <DeviceLink />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/monitor"
-          element={
-            <ProtectedRoute>
-              <Monitor />
             </ProtectedRoute>
           }
         />

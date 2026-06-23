@@ -1,7 +1,13 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Layout from '../components/Layout.jsx'
+import { updateAvatar } from '../api/auth.js'
 
 export default function Settings() {
+  const fileInputRef = useRef(null)
+  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('modbus_user') || '{}'))
+  const [uploading, setUploading] = useState(false)
+  const [avatarError, setAvatarError] = useState('')
+
   const [settings, setSettings] = useState({
     host: '192.168.1.104',
     port: '502',
@@ -22,10 +28,77 @@ export default function Settings() {
     alert('配置已保存（演示）')
   }
 
+  const handleFileChange = async (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setAvatarError('')
+
+    if (!file.type.startsWith('image/')) {
+      setAvatarError('请选择图片文件')
+      return
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setAvatarError('图片大小不能超过 2MB')
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onload = async (event) => {
+      const base64 = event.target.result
+      setUploading(true)
+      try {
+        const res = await updateAvatar({ avatar_url: base64 })
+        const updatedUser = { ...user, avatar_url: base64 }
+        localStorage.setItem('modbus_user', JSON.stringify(updatedUser))
+        setUser(updatedUser)
+        alert('头像更新成功')
+      } catch (err) {
+        setAvatarError(err.response?.data?.message || '上传失败')
+      } finally {
+        setUploading(false)
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+
   return (
     <Layout title="系统设置">
       <div className="max-w-[1200px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+          {/* 用户头像 */}
+          <section className="lg:col-span-12 bg-surface-container border border-outline-variant p-6">
+            <div className="mb-4 text-xs text-outline uppercase">00_用户头像 / USER_AVATAR</div>
+            <div className="flex items-center gap-6">
+              <div className="w-20 h-20 rounded bg-surface-container-high border border-outline-variant flex items-center justify-center overflow-hidden">
+                {user.avatar_url ? (
+                  <img src={user.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="material-symbols-outlined text-4xl text-primary">person</span>
+                )}
+              </div>
+              <div className="flex flex-col gap-2">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="px-4 py-2 bg-secondary-container text-on-secondary text-xs font-bold uppercase disabled:opacity-50"
+                >
+                  {uploading ? '上传中...' : '更换头像'}
+                </button>
+                {avatarError && <span className="text-error text-xs">{avatarError}</span>}
+                <span className="text-[10px] text-outline">支持 JPG/PNG，最大 2MB</span>
+              </div>
+            </div>
+          </section>
+
           {/* 通信配置 */}
           <section className="lg:col-span-7 bg-surface-container border border-outline-variant p-6">
             <div className="mb-6 text-xs text-outline uppercase">01_通信配置 / COMMUNICATION</div>

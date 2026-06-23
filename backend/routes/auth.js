@@ -1,5 +1,5 @@
 import express from 'express';
-import { register, login, getMe, logout } from '../controllers/authController.js';
+import { register, login, getMe, logout, updateAvatar } from '../controllers/authController.js';
 import { validateRegister, validateLogin } from '../middleware/validate.js';
 import { authenticateToken } from '../middleware/auth.js';
 
@@ -16,5 +16,8 @@ router.get('/me', authenticateToken, getMe);
 
 // POST /api/auth/logout
 router.post('/logout', authenticateToken, logout);
+
+// POST /api/auth/avatar（需要登录）
+router.post('/avatar', authenticateToken, updateAvatar);
 
 export default router;

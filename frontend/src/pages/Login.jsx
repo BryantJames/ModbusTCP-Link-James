@@ -22,7 +22,7 @@ export default function Login() {
       const { token, ...user } = res.data.data
       localStorage.setItem('modbus_token', token)
       localStorage.setItem('modbus_user', JSON.stringify(user))
-      navigate('/dashboard')
+      navigate('/monitor')
     } catch (err) {
       const msg = err.response?.data?.message || '登录失败，请检查网络'
       setError(msg)

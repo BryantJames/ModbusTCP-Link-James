@@ -1,9 +1,8 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const menuItems = [
-  { path: '/dashboard', label: '总览', icon: 'dashboard' },
-  { path: '/device-link', label: '设备连接', icon: 'lan' },
   { path: '/monitor', label: '实时监控', icon: 'monitoring' },
+  { path: '/device-link', label: '设备连接', icon: 'lan' },
   { path: '/registers', label: '寄存器读写', icon: 'list_alt' },
   { path: '/alarms', label: '报警中心', icon: 'error_outline' },
   { path: '/history', label: '历史记录', icon: 'history' },
@@ -50,8 +49,12 @@ export default function Sidebar() {
 
       <div className="p-4 border-t border-outline-variant">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-8 h-8 rounded bg-surface-container-high border border-outline-variant flex items-center justify-center">
-            <span className="material-symbols-outlined text-primary">person</span>
+          <div className="w-10 h-10 rounded bg-surface-container-high border border-outline-variant flex items-center justify-center overflow-hidden shrink-0">
+            {user.avatar_url ? (
+              <img src={user.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+            ) : (
+              <span className="material-symbols-outlined text-primary">person</span>
+            )}
           </div>
           <div className="overflow-hidden">
             <p className="text-xs font-bold truncate">{user.display_name || user.username || '未登录'}</p>
